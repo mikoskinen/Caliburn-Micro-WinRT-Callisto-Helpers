@@ -14,6 +14,11 @@ namespace caliburn_micro_winrt_getting_started
             this.DisplayName = "My Settings";
         }
 
-        public bool TestSetting { get; set; }
+        private bool testSetting;
+        public bool TestSetting
+        {
+            get { return this.testSetting; }
+            set { this.testSetting = value; NotifyOfPropertyChange(() => TestSetting); }
+        }
     }
 }
