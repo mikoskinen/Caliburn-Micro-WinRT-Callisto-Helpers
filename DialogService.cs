@@ -4,6 +4,7 @@ using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Caliburn.Micro
 {
@@ -18,11 +19,11 @@ namespace Caliburn.Micro
         /// <param name="onClosed">Method which is executed after the dialog has been closed</param>
         /// <param name="headerBrush">Setting pane's header color</param>
         /// <param name="backgroundBrush">Setting pane's backgruond color</param>
-        public static void AddSetting<T>(this SettingsPaneCommandsRequestedEventArgs args, Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null) where T : Screen
+        public static void AddSetting<T>(this SettingsPaneCommandsRequestedEventArgs args, Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null, SettingsFlyout.SettingsFlyoutWidth flyoutWidth = SettingsFlyout.SettingsFlyoutWidth.Narrow, Uri logoUri = null) where T : Screen
         {
             var header = IoC.Get<T>().DisplayName;
 
-            var cmd = new SettingsCommand(header, header, command => DialogService.ShowSettings(onInitialize, onClosed, headerBrush, backgroundBrush));
+            var cmd = new SettingsCommand(header, header, command => DialogService.ShowSettings(onInitialize, onClosed, headerBrush, backgroundBrush, flyoutWidth, logoUri));
 
             args.Request.ApplicationCommands.Add(cmd);
         }
@@ -41,7 +42,7 @@ namespace Caliburn.Micro
         /// <param name="onClosed">Method which is executed after the dialog has been closed</param>
         /// <param name="headerBrush">Setting pane's header color</param>
         /// <param name="backgroundBrush">Setting pane's backgruond color</param>
-        public static void ShowSettings<T>(Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null) where T : Screen
+        public static void ShowSettings<T>(Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null, SettingsFlyout.SettingsFlyoutWidth flyoutWidth = SettingsFlyout.SettingsFlyoutWidth.Narrow, Uri logoUri = null) where T : Screen
         {
             var viewModelAndView = CreateViewModelAndView(onInitialize);
             var vm = viewModelAndView.Item1;
@@ -52,6 +53,14 @@ namespace Caliburn.Micro
                 HeaderText = vm.DisplayName,
                 Content = view,
             };
+
+            f.FlyoutWidth = flyoutWidth;
+
+            if (logoUri != null)
+            {
+                var bmp = new BitmapImage(logoUri);
+                f.SmallLogoImageSource = bmp;
+            }
 
             if (headerBrush != null)
                 f.HeaderBrush = headerBrush;
