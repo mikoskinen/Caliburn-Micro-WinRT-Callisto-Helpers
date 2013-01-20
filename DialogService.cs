@@ -41,7 +41,7 @@ namespace Caliburn.Micro
         /// <param name="onClosed">Method which is executed after the dialog has been closed</param>
         /// <param name="headerBrush">Setting pane's header color</param>
         /// <param name="backgroundBrush">Setting pane's backgruond color</param>
-        public static void ShowSettings<T>(Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null) where T : Screen
+        public static void ShowSettings<T>(Action<T> onInitialize = null, Action<T, UIElement> onClosed = null, SolidColorBrush headerBrush = null, SolidColorBrush backgroundBrush = null) where T : IScreen
         {
             var viewModelAndView = CreateViewModelAndView(onInitialize);
             var vm = viewModelAndView.Item1;
@@ -72,7 +72,7 @@ namespace Caliburn.Micro
         /// <param name="placementTarget">The control which is used as a placement target. Example: Placement target can be a button the view. Placement-property defines if the dialog is shown above, under, left or right of the button.</param>
         /// <param name="onInitialize">Method which is executed before the dialog is shown</param>
         /// <param name="onClose">Method which is executed after the dialog has been closed</param>
-        public static void ShowDialog<T>(PlacementMode placement, UIElement placementTarget, Action<T> onInitialize = null, Action<T, UIElement> onClose = null) where T : Screen
+        public static void ShowDialog<T>(PlacementMode placement, UIElement placementTarget, Action<T> onInitialize = null, Action<T, UIElement> onClose = null) where T : IScreen
         {
             var viewModelAndView = CreateViewModelAndView(onInitialize);
             var vm = viewModelAndView.Item1;
@@ -90,7 +90,7 @@ namespace Caliburn.Micro
                 f.Closed += (sender, o) => onClose(vm, view);
         }
 
-        private static Tuple<T, UIElement> CreateViewModelAndView<T>(Action<T> onInitialize = null) where T : Screen
+        private static Tuple<T, UIElement> CreateViewModelAndView<T>(Action<T> onInitialize = null) where T : IScreen
         {
             var vm = IoC.Get<T>();
             var view = ViewLocator.LocateForModel(vm, null, null);
